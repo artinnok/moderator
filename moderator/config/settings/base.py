@@ -3,6 +3,7 @@ import os
 from unipath import Path
 
 from config.settings.rest import *
+from config.settings.vk import *
 
 
 BASE_DIR = Path(__file__).ancestor(3)
