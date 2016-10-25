@@ -16,5 +16,5 @@ urlpatterns = [
     url(
         regex=r'^api/',
         view=include('api.urls', namespace='api')
-    )
+    ),
 ]
