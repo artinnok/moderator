@@ -2,8 +2,6 @@ import os
 
 from unipath import Path
 
-from config.settings.celery import *
-
 
 BASE_DIR = Path(__file__).ancestor(3)
 
@@ -16,7 +14,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'imagekit',
     'django_extensions',
     'core.apps.CoreConfig'
 ]

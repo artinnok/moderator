@@ -1,5 +1,4 @@
 from django.db import models
-from imagekit.models import ProcessedImageField
 
 
 class Titleable(models.Model):
@@ -15,16 +14,6 @@ class Titleable(models.Model):
 class Textable(models.Model):
     text = models.TextField(
         verbose_name='Текст'
-    )
-
-    class Meta:
-        abstract = True
-
-
-class Imageable(models.Model):
-    image = ProcessedImageField(
-        verbose_name='Изображение',
-        options={'optimize': True}
     )
 
     class Meta:
