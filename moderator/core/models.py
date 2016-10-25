@@ -13,7 +13,7 @@ class Token(cm.Common):
     access_token = models.CharField(
         max_length=200,
         verbose_name='Токен'
-    ),
+    )
     expires_in = models.BigIntegerField(
         verbose_name='Истекает в течение'
     )
