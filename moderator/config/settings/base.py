@@ -74,10 +74,10 @@ USE_L10N = True
 USE_TZ = True
 
 # static
-STATICFILES_DIRS = [BASE_DIR.child("static").child("build")]
+STATICFILES_DIRS = []
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR.child("collect_static")
 
 # media
-MEDIA_ROOT = BASE_DIR.child("media")
+MEDIA_ROOT = ''
 MEDIA_URL = '/media/'
