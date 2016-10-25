@@ -2,6 +2,8 @@ import os
 
 from unipath import Path
 
+from config.settings.rest import *
+
 
 BASE_DIR = Path(__file__).ancestor(3)
 
@@ -15,7 +17,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'core.apps.CoreConfig'
+    'rest_framework',
+    'core.apps.CoreConfig',
 ]
 
 MIDDLEWARE_CLASSES = [
