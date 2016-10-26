@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.conf import settings
 import requests
 
-from core.models import Token
+from core.models import Token, Club
 
 
 class BaseAPI(APIView):
@@ -47,7 +47,7 @@ class CallbackView(APIView):
             code=code
         ))
         json = r.json()
-        token, created = Token.objects.update_or_create(
+        Token.objects.update_or_create(
             access_token=json['access_token'],
             defaults=json
         )
@@ -55,33 +55,38 @@ class CallbackView(APIView):
 
 
 class PostsView(BaseAPI):
-    method_name = 'wall.get'
-    parameters = 'owner_id=-112088372'
-
     def get(self, request, *args, **kwargs):
-        self.get_comment_list()
-        return Response()
-
-    def fetch_post_id_list(self):
-        """вернет id постов, которые имееют количество коментов > 0"""
-        json = self.get_json_response(self.method_name, self.parameters)
-        items = json['response']['items']
-        return (post['id'] for post in items if post['comments']['count'])
+        data = self.get_comment_list()
+        return Response(data)
 
     def get_comment_list(self):
         """пройдет по каждому id посту, и вытащит комменты"""
-        id_list = self.fetch_post_id_list()
-        for id in id_list:
-            self.fetch_post_comment_list(id)
+        out = []
+        post_id_list = self.fetch_post_id_list()
+        for post_id in post_id_list:
+            out += (post_id, self.fetch_post_comment_list(post_id))
+        return out
+
+    def fetch_post_id_list(self):
+        """вернет id постов, которые имееют количество коментов > 0"""
+        owner_id = Club.objects.first().owner_id
+        method = 'wall.get'
+        parameters = 'owner_id={owner_id}'.format(owner_id=owner_id)
+        json = self.get_json_response(method, parameters)
+        items = json['response']['items']
+        return (post['id'] for post in items if post['comments']['count'])
 
     def fetch_post_comment_list(self, post_id):
         """вернет id коментов у которых меньше 5 лайков"""
-        json = self.get_json_response(
-            'wall.getComments',
-            'owner_id=-112088372&post_id={post_id}&need_likes=1&count=100'.format(post_id=post_id)
-        )
+        owner_id = Club.objects.first().owner_id
+        method = 'wall.getComments'
+        parameters = ('owner_id={owner_id}&'
+                      'post_id={post_id}&'
+                      'need_likes=1&'
+                      'count=100'.format(owner_id=owner_id, post_id=post_id))
+        json = self.get_json_response(method, parameters)
         items = json['response']['items']
-        return (comment['id'] for comment in items if comment['likes']['count'] < 5)
+        return [comment['id'] for comment in items if comment['likes']['count'] < 5]
 
 
 class PermissionsView(BaseAPI):
