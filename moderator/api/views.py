@@ -55,6 +55,8 @@ class CallbackView(APIView):
 
 
 class PostsView(BaseAPI):
+    owner_id = Club.objects.last().owner_id
+
     def get(self, request, *args, **kwargs):
         data = self.get_comment_list()
         return Response(data)
@@ -69,21 +71,21 @@ class PostsView(BaseAPI):
 
     def fetch_post_id_list(self):
         """вернет id постов, которые имееют количество коментов > 0"""
-        owner_id = Club.objects.first().owner_id
         method = 'wall.get'
-        parameters = 'owner_id={owner_id}'.format(owner_id=owner_id)
+        parameters = 'owner_id={owner_id}&count=10'.format(
+            owner_id=self.owner_id)
         json = self.get_json_response(method, parameters)
         items = json['response']['items']
         return (post['id'] for post in items if post['comments']['count'])
 
     def fetch_post_comment_list(self, post_id):
         """вернет id коментов у которых меньше 5 лайков"""
-        owner_id = Club.objects.first().owner_id
         method = 'wall.getComments'
         parameters = ('owner_id={owner_id}&'
                       'post_id={post_id}&'
                       'need_likes=1&'
-                      'count=100'.format(owner_id=owner_id, post_id=post_id))
+                      'count=100'.format(owner_id=self.owner_id,
+                                         post_id=post_id))
         json = self.get_json_response(method, parameters)
         items = json['response']['items']
         return [comment['id'] for comment in items if comment['likes']['count'] < 5]
