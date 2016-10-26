@@ -1,6 +1,7 @@
 from django.db import models
 
 from core import common_models as cm
+from core import behaviors as bh
 
 
 class Token(cm.Common):
@@ -27,7 +28,7 @@ class Token(cm.Common):
         return str(self.user_id)
 
 
-class Club(cm.Common):
+class Club(bh.Titleable, cm.Common):
     """
     Сущность паблика
     """
