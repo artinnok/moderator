@@ -7,6 +7,20 @@ import requests
 from core.models import Token
 
 
+class BaseAPI(APIView):
+    url = 'https://api.vk.com/method/{method_name}?{parameters}&access_token={access_token}&v=5.59'
+    method_name = ''
+    parameters = ''
+
+    def get(self, request, *args, **kwargs):
+        r = requests.get(self.url.format(
+            method_name=self.method_name,
+            parameters=self.parameters,
+            access_token=Token.objects.last().access_token
+        ))
+        return Response(r.json())
+
+
 class AuthorizeView(APIView):
     url = 'https://oauth.vk.com/authorize?client_id={client_id}&display=page&redirect_uri={redirect_uri}&scope={scope}&response_type=code&v=5.59'
 
@@ -14,7 +28,7 @@ class AuthorizeView(APIView):
         return redirect(self.url.format(
             client_id=settings.CLIENT_ID,
             redirect_uri=settings.REDIRECT_URI,
-            scope='262144'
+            scope='friends,photos,wall,audio'
         ))
 
 
@@ -37,13 +51,19 @@ class CallbackView(APIView):
         return Response('ok')
 
 
-class HelloView(APIView):
-    url = 'https://api.vk.com/method/{method_name}?{parameters}&access_token={access_token}&v=5.59'
+class PostsView(BaseAPI):
+    method_name = 'wall.get'
+    parameters = 'owner_id=-112088372'
 
-    def get(self, request, *args, **kwargs):
-        r = requests.get(self.url.format(
-            method_name='wall.deleteComment',
-            parameters='owner_id=-112088372&comment_id=40',
-            access_token=Token.objects.last().access_token
-        ))
-        return Response({'success': r.json()})
+
+class PermissionsView(BaseAPI):
+    method_name = 'account.getAppPermissions'
+    parameters = ''
+
+
+class DeleteView(BaseAPI):
+    method_name = 'wall.deleteComment'
+    parameters = 'owner_id=-112088372&comment_id=40'
+
+
+

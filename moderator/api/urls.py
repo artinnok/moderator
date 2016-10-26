@@ -1,6 +1,7 @@
 from django.conf.urls import url
 
-from api.views import AuthorizeView, CallbackView, HelloView
+from api.views import (AuthorizeView, CallbackView, PostsView,
+                       PermissionsView, DeleteView)
 
 urlpatterns = [
     url(
@@ -14,8 +15,18 @@ urlpatterns = [
         name='callback'
     ),
     url(
-        regex=r'^hello/$',
-        view=HelloView.as_view(),
-        name='hello'
-    )
+        regex=r'^posts/$',
+        view=PostsView.as_view(),
+        name='posts'
+    ),
+    url(
+        regex=r'^permissions/$',
+        view=PermissionsView.as_view(),
+        name='permissions'
+    ),
+    url(
+        regex=r'^delete/$',
+        view=DeleteView.as_view(),
+        name='delete'
+    ),
 ]
