@@ -12,13 +12,16 @@ class BaseAPI(APIView):
     method_name = ''
     parameters = ''
 
-    def get(self, request, *args, **kwargs):
-        r = requests.get(self.url.format(
-            method_name=self.method_name,
-            parameters=self.parameters,
+    def get_json_response(self, method, parameters):
+        return requests.get(self.url.format(
+            method_name=method,
+            parameters=parameters,
             access_token=Token.objects.last().access_token
-        ))
-        return Response(r.json())
+        )).json()
+
+    def get(self, request, *args, **kwargs):
+        res = self.get_json_response(self.method_name, self.parameters)
+        return Response(res)
 
 
 class AuthorizeView(APIView):
@@ -54,6 +57,31 @@ class CallbackView(APIView):
 class PostsView(BaseAPI):
     method_name = 'wall.get'
     parameters = 'owner_id=-112088372'
+
+    def get(self, request, *args, **kwargs):
+        self.get_comment_list()
+        return Response()
+
+    def fetch_post_id_list(self):
+        """вернет id постов, которые имееют количество коментов > 0"""
+        json = self.get_json_response(self.method_name, self.parameters)
+        items = json['response']['items']
+        return (post['id'] for post in items if post['comments']['count'])
+
+    def get_comment_list(self):
+        """пройдет по каждому id посту, и вытащит комменты"""
+        id_list = self.fetch_post_id_list()
+        for id in id_list:
+            self.fetch_post_comment_list(id)
+
+    def fetch_post_comment_list(self, post_id):
+        """вернет id коментов у которых меньше 5 лайков"""
+        json = self.get_json_response(
+            'wall.getComments',
+            'owner_id=-112088372&post_id={post_id}&need_likes=1&count=100'.format(post_id=post_id)
+        )
+        items = json['response']['items']
+        return (comment['id'] for comment in items if comment['likes']['count'] < 5)
 
 
 class PermissionsView(BaseAPI):
