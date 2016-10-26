@@ -25,3 +25,19 @@ class Token(cm.Common):
 
     def __str__(self):
         return str(self.user_id)
+
+
+class Club(cm.Common):
+    """
+    Сущность паблика
+    """
+    owner_id = models.BigIntegerField(
+        verbose_name='ID паблика'
+    )
+
+    class Meta:
+        verbose_name = 'паблик'
+        verbose_name_plural = 'паблики'
+
+    def __str__(self):
+        return str(self.owner_id)
