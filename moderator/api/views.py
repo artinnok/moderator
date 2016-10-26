@@ -8,12 +8,13 @@ from core.models import Token
 
 
 class AuthorizeView(APIView):
-    url = 'https://oauth.vk.com/authorize?client_id={client_id}&display=page&redirect_uri={redirect_uri}&scope=friends&response_type=code&v=5.59'
+    url = 'https://oauth.vk.com/authorize?client_id={client_id}&display=page&redirect_uri={redirect_uri}&scope={scope}&response_type=code&v=5.59'
 
     def get(self, request, *args, **kwargs):
         return redirect(self.url.format(
             client_id=settings.CLIENT_ID,
-            redirect_uri=settings.REDIRECT_URI
+            redirect_uri=settings.REDIRECT_URI,
+            scope='262144'
         ))
 
 
@@ -35,3 +36,14 @@ class CallbackView(APIView):
         )
         return Response('ok')
 
+
+class HelloView(APIView):
+    url = 'https://api.vk.com/method/{method_name}?{parameters}&access_token={access_token}&v=5.59'
+
+    def get(self, request, *args, **kwargs):
+        r = requests.get(self.url.format(
+            method_name='wall.deleteComment',
+            parameters='owner_id=-112088372&comment_id=40',
+            access_token=Token.objects.last().access_token
+        ))
+        return Response({'success': r.json()})
