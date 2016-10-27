@@ -16,21 +16,22 @@ def start():
     for post in post_list:
         comment_list = fetcher.fetch_comment_list(fetcher.owner_id, post)
         comment_list = fetcher.filter_comment_list(comment_list)
-        out += [(post, comment_list)]
-        print(out)
-    return out
+        out += comment_list
+    for comment_id in out:
+        fetcher.delete_comment(owner_id, comment_id)
 
 
 class HelloView(APIView):
     def get(self, request, *args, **kwargs):
         out = []
-        owner_id = Club.objects.last().owner_id
+        owner_id = Club.objects.first().owner_id
         fetcher = Fetcher(owner_id)
         post_list = fetcher.fetch_post_list(fetcher.owner_id)
         post_list = fetcher.filter_post_list(post_list)
         for post in post_list:
             comment_list = fetcher.fetch_comment_list(fetcher.owner_id, post)
             comment_list = fetcher.filter_comment_list(comment_list)
-            out += [(post, comment_list)]
-            print(out)
+            out += comment_list
+        for comment_id in out:
+            fetcher.delete_comment(owner_id, comment_id)
         return Response('hello')

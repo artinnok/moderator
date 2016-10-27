@@ -14,7 +14,7 @@ class Fetcher:
             method_name=method,
             parameters=parameters,
             access_token=token
-        )).json()['response']['items']
+        )).json()
 
     def fetch_post_list(self, owner_id):
         method = 'wall.get'
@@ -22,8 +22,8 @@ class Fetcher:
                       '&count=10'.format(owner_id=owner_id))
         token = Token.objects.last().access_token
 
-        items = self.fetch(method, parameters, token)
-        return items
+        json = self.fetch(method, parameters, token)
+        return json['response']['items']
 
     def filter_post_list(self, post_list):
         return (post['id'] for post in post_list if post['comments']['count'])
@@ -36,10 +36,20 @@ class Fetcher:
                       'count=100'.format(owner_id=owner_id, post_id=post_id))
         token = Token.objects.last().access_token
 
-        items = self.fetch(method, parameters, token)
-        return items
+        json = self.fetch(method, parameters, token)
+        return json['response']['items']
 
     def filter_comment_list(self, comment_list):
         return [comment['id'] for comment in comment_list
                 if comment['likes']['count'] < 5]
 
+    def delete_comment(self, owner_id, comment_id):
+        method = 'wall.deleteComment'
+        parameters = ('owner_id={owner_id}&'
+                      'comment_id={comment_id}'.format(owner_id=owner_id,
+                                                       comment_id=comment_id))
+        token = Token.objects.last().access_token
+
+        json = self.fetch(method, parameters, token)
+        print(json)
+        return json
