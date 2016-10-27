@@ -12,8 +12,8 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
 CELERYBEAT_SCHEDULE = {
-    'start': {
+    'moderate': {
         'task': 'start',
-        'schedule': timedelta(minutes=3),
+        'schedule': timedelta(seconds=30),
     }
 }
