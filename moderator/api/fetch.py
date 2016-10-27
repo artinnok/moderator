@@ -1,5 +1,7 @@
+from celery import shared_task
+import requests
+
 from core.models import Token
-from api.tasks import fetch
 
 
 class Fetcher:
@@ -15,6 +17,7 @@ class Fetcher:
         token = Token.objects.last().access_token
 
         json = fetch.delay(method, parameters, token)
+        json = json.get()
         return json['response']['items']
 
     def filter_post_list(self, post_list):
@@ -29,6 +32,7 @@ class Fetcher:
         token = Token.objects.last().access_token
 
         json = fetch.delay(method, parameters, token)
+        json = json.get()
         return json['response']['items']
 
     def filter_comment_list(self, comment_list):
@@ -43,5 +47,30 @@ class Fetcher:
         token = Token.objects.last().access_token
 
         json = fetch.delay(method, parameters, token)
-        print(json)
+        json = json.get()
         return json
+
+
+@shared_task(name='start')
+def start():
+    out = []
+    fetcher = Fetcher(-112088372)
+    post_list = fetcher.fetch_post_list(fetcher.owner_id)
+    post_list = fetcher.filter_post_list(post_list)
+    for post in post_list:
+        comment_list = fetcher.fetch_comment_list(fetcher.owner_id, post)
+        out += fetcher.filter_comment_list(comment_list)
+    for comment_id in out:
+        fetcher.delete_comment(fetcher.owner_id, comment_id)
+
+
+@shared_task(rate_limit='3/s')
+def fetch(method, parameters, token):
+    url = 'https://api.vk.com/method/{method_name}?{parameters}&access_token={access_token}&v=5.59'
+    return requests.get(url.format(
+        method_name=method,
+        parameters=parameters,
+        access_token=token
+    )).json()
+
+

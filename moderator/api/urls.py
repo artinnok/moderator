@@ -24,5 +24,5 @@ urlpatterns = [
         regex=r'^permissions/$',
         view=PermissionsView.as_view(),
         name='permissions'
-    )
+    ),
 ]
