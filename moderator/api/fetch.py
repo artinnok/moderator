@@ -42,8 +42,11 @@ class Fetcher:
                 if comment['likes']['count'] < 5)
 
     def start(self):
+        out = []
         post_list = self.fetch_post_list(self.owner_id)
         post_list = self.filter_post_list(post_list)
         for post in post_list:
             comment_list = self.fetch_comment_list(self.owner_id, post)
             comment_list = self.filter_comment_list(comment_list)
+            out += [(post, comment_list)]
+        return out
