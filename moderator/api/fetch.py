@@ -1,4 +1,6 @@
 import requests
+from celery.contrib.methods import task_method
+from celery import shared_task
 
 from core.models import Token, Club
 
@@ -41,6 +43,7 @@ class Fetcher:
         return (comment['id'] for comment in comment_list
                 if comment['likes']['count'] < 5)
 
+    @shared_task(filter=task_method, name='start')
     def start(self):
         out = []
         post_list = self.fetch_post_list(self.owner_id)
