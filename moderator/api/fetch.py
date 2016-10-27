@@ -1,6 +1,5 @@
-import requests
-
-from core.models import Token, Club
+from core.models import Token
+from api.tasks import fetch
 
 
 class Fetcher:
@@ -9,20 +8,13 @@ class Fetcher:
     def __init__(self, owner_id):
         self.owner_id = owner_id
 
-    def fetch(self, method, parameters, token):
-        return requests.get(self.url.format(
-            method_name=method,
-            parameters=parameters,
-            access_token=token
-        )).json()
-
     def fetch_post_list(self, owner_id):
         method = 'wall.get'
         parameters = ('owner_id={owner_id}'
                       '&count=10'.format(owner_id=owner_id))
         token = Token.objects.last().access_token
 
-        json = self.fetch(method, parameters, token)
+        json = fetch.delay(method, parameters, token)
         return json['response']['items']
 
     def filter_post_list(self, post_list):
@@ -36,7 +28,7 @@ class Fetcher:
                       'count=100'.format(owner_id=owner_id, post_id=post_id))
         token = Token.objects.last().access_token
 
-        json = self.fetch(method, parameters, token)
+        json = fetch.delay(method, parameters, token)
         return json['response']['items']
 
     def filter_comment_list(self, comment_list):
@@ -50,6 +42,6 @@ class Fetcher:
                                                        comment_id=comment_id))
         token = Token.objects.last().access_token
 
-        json = self.fetch(method, parameters, token)
+        json = fetch.delay(method, parameters, token)
         print(json)
         return json

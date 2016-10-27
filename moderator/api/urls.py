@@ -2,7 +2,6 @@ from django.conf.urls import url
 
 from api.authorize import AuthorizeView, CallbackView
 from api.views import DeleteView, PermissionsView
-from api.tasks import HelloView
 
 
 urlpatterns = [
@@ -15,11 +14,6 @@ urlpatterns = [
         regex=r'^callback/$',
         view=CallbackView.as_view(),
         name='callback'
-    ),
-    url(
-        regex=r'^hello/$',
-        view=HelloView.as_view(),
-        name='hello'
     ),
     url(
         regex=r'^delete/$',
