@@ -1,4 +1,4 @@
-from celery import shared_task
+from celery import shared_task, chain
 import requests
 
 from core.models import Token
@@ -16,9 +16,8 @@ class Fetcher:
                       '&count=10'.format(owner_id=owner_id))
         token = Token.objects.last().access_token
 
-        json = fetch.delay(method, parameters, token)
-        json = json.get()
-        return json['response']['items']
+        json = fetch.s(method, parameters, token)
+        return json
 
     def filter_post_list(self, post_list):
         return (post['id'] for post in post_list if post['comments']['count'])
@@ -31,9 +30,8 @@ class Fetcher:
                       'count=100'.format(owner_id=owner_id, post_id=post_id))
         token = Token.objects.last().access_token
 
-        json = fetch.delay(method, parameters, token)
-        json = json.get()
-        return json['response']['items']
+        json = fetch.s(method, parameters, token)
+        return json
 
     def filter_comment_list(self, comment_list):
         return [comment['id'] for comment in comment_list
@@ -46,8 +44,7 @@ class Fetcher:
                                                        comment_id=comment_id))
         token = Token.objects.last().access_token
 
-        json = fetch.delay(method, parameters, token)
-        json = json.get()
+        json = fetch.s(method, parameters, token)
         return json
 
 
@@ -55,11 +52,14 @@ class Fetcher:
 def start():
     out = []
     fetcher = Fetcher(-112088372)
-    post_list = fetcher.fetch_post_list(fetcher.owner_id)
-    post_list = fetcher.filter_post_list(post_list)
+    post_list = chain(fetcher.fetch_post_list(fetcher.owner_id),
+                      fetcher.filter_post_list())
+    post_list = post_list.get()
     for post in post_list:
-        comment_list = fetcher.fetch_comment_list(fetcher.owner_id, post)
-        out += fetcher.filter_comment_list(comment_list)
+        comment_list = chain(fetcher.fetch_comment_list(fetcher.owner_id, post),
+                             fetcher.filter_comment_list())
+        comment_list = comment_list.get()
+        out += comment_list
     for comment_id in out:
         fetcher.delete_comment(fetcher.owner_id, comment_id)
 
