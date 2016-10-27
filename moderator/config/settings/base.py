@@ -4,7 +4,7 @@ from unipath import Path
 
 from config.settings.rest import *
 from config.settings.vk import *
-
+from config.settings.celery import *
 
 BASE_DIR = Path(__file__).ancestor(3)
 
@@ -19,7 +19,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'rest_framework',
-    'core.apps.CoreConfig',
+    'api',
+    'core',
 ]
 
 MIDDLEWARE_CLASSES = [

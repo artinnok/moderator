@@ -1,13 +1,13 @@
 import requests
-from celery.contrib.methods import task_method
-from celery import shared_task
 
 from core.models import Token, Club
 
 
 class Fetcher:
-    owner_id = Club.objects.last().owner_id
     url = 'https://api.vk.com/method/{method_name}?{parameters}&access_token={access_token}&v=5.59'
+
+    def __index__(self, owner_id):
+        self.owner_id = owner_id
 
     def fetch(self, method, parameters, token):
         return requests.get(self.url.format(
@@ -43,13 +43,3 @@ class Fetcher:
         return (comment['id'] for comment in comment_list
                 if comment['likes']['count'] < 5)
 
-    @shared_task(filter=task_method, name='start')
-    def start(self):
-        out = []
-        post_list = self.fetch_post_list(self.owner_id)
-        post_list = self.filter_post_list(post_list)
-        for post in post_list:
-            comment_list = self.fetch_comment_list(self.owner_id, post)
-            comment_list = self.filter_comment_list(comment_list)
-            out += [(post, comment_list)]
-        return out
