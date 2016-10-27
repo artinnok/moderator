@@ -8,13 +8,13 @@ from core.models import Token
 
 
 class AuthorizeView(APIView):
-    url = 'https://oauth.vk.com/authorize?client_id={client_id}&display=page&redirect_uri={redirect_uri}&scope={scope}&response_type=code&v=5.59'
+    url = 'https://oauth.vk.com/authorize?client_id={client_id}&display=page&redirect_uri={redirect_uri}&scope={scope}&response_type=token&v=5.59'
 
     def get(self, request, *args, **kwargs):
         return redirect(self.url.format(
             client_id=settings.CLIENT_ID,
             redirect_uri=settings.REDIRECT_URI,
-            scope='friends,photos,wall,audio'
+            scope='wall,offline,messages,groups'
         ))
 
 
