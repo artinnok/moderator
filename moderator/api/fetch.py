@@ -12,24 +12,21 @@ class Fetcher:
             method_name=method,
             parameters=parameters,
             access_token=token
-        )).json()
+        )).json()['response']['items']
 
     def fetch_post_list(self, owner_id):
-        """вернет id постов, которые имееют количество коментов > 0"""
         method = 'wall.get'
         parameters = ('owner_id={owner_id}'
                       '&count=10'.format(owner_id=owner_id))
         token = Token.objects.last().access_token
 
-        json = self.fetch(method, parameters, token)
-        items = json['response']['items']
+        items = self.fetch(method, parameters, token)
         return items
 
     def filter_post_list(self, post_list):
         return (post['id'] for post in post_list if post['comments']['count'])
 
     def fetch_comment_list(self, owner_id, post_id):
-        """вернет id коментов у которых меньше 5 лайков"""
         method = 'wall.getComments'
         parameters = ('owner_id={owner_id}&'
                       'post_id={post_id}&'
@@ -37,10 +34,16 @@ class Fetcher:
                       'count=100'.format(owner_id=owner_id, post_id=post_id))
         token = Token.objects.last().access_token
 
-        json = self.fetch(method, parameters, token)
-        items = json['response']['items']
+        items = self.fetch(method, parameters, token)
         return items
 
     def filter_comment_list(self, comment_list):
         return (comment['id'] for comment in comment_list
                 if comment['likes']['count'] < 5)
+
+    def start(self):
+        post_list = self.fetch_post_list(self.owner_id)
+        post_list = self.filter_post_list(post_list)
+        for post in post_list:
+            comment_list = self.fetch_comment_list(self.owner_id, post)
+            comment_list = self.filter_comment_list(comment_list)
