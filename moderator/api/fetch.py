@@ -6,7 +6,7 @@ from core.models import Token, Club
 class Fetcher:
     url = 'https://api.vk.com/method/{method_name}?{parameters}&access_token={access_token}&v=5.59'
 
-    def __index__(self, owner_id):
+    def __init__(self, owner_id):
         self.owner_id = owner_id
 
     def fetch(self, method, parameters, token):
@@ -40,6 +40,6 @@ class Fetcher:
         return items
 
     def filter_comment_list(self, comment_list):
-        return (comment['id'] for comment in comment_list
-                if comment['likes']['count'] < 5)
+        return [comment['id'] for comment in comment_list
+                if comment['likes']['count'] < 5]
 
