@@ -4,7 +4,6 @@ import requests
 from core.models import Token
 
 
-@shared_task(name='fetch', rate_limit='3/s')
 def fetch(method, parameters, token):
     url = ('https://api.vk.com/method/'
            '{method_name}?'
@@ -18,19 +17,27 @@ def fetch(method, parameters, token):
     )).json()
 
 
-@shared_task(name='fetch_post_list')
+@shared_task(name='fetch_post_list', rate_limit='3/s')
 def fetch_post_list(owner_id):
     method = 'wall.get'
     parameters = ('owner_id={owner_id}'
                   '&count=10'.format(owner_id=owner_id))
     token = Token.objects.last().access_token
 
-    json = fetch.delay(method, parameters, token).wait()
+    json = fetch(method, parameters, token)
     return json['response']['items']
 
 
-@shared_task(name='fetch_comment_list')
-def fetch_comment_list(self, post_id, owner_id):
+@shared_task(name='fetch_comment_list', rate_limit='3/s')
+def fetch_comment_list(post_list, owner_id):
+    out = []
+    for post in post_list:
+        out += fetch_comment(post, owner_id)
+    return out
+
+
+@shared_task(name='fetch_comment_list', rate_limit='3/s')
+def fetch_comment(post_id, owner_id):
     method = 'wall.getComments'
     parameters = ('owner_id={owner_id}&'
                   'post_id={post_id}&'
@@ -38,5 +45,5 @@ def fetch_comment_list(self, post_id, owner_id):
                   'count=100'.format(owner_id=owner_id, post_id=post_id))
     token = Token.objects.last().access_token
 
-    json = self.fetch.delay(method, parameters, token).wait()
+    json = fetch(method, parameters, token)
     return json['response']['items']
