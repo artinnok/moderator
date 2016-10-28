@@ -13,7 +13,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_RESULT_BACKEND = 'rpc://'
 
-CELERY_IMPORTS = ['api.fetch']
+CELERY_IMPORTS = ['api.fetch', 'api.filter', 'api.start']
 
 CELERYBEAT_SCHEDULE = {
     'moderate': {
