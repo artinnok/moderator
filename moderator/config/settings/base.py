@@ -75,7 +75,7 @@ USE_L10N = True
 USE_TZ = True
 
 # static
-STATICFILES_DIRS = []
+STATICFILES_DIRS = [BASE_DIR.child('static').child('build')]
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR.child("collect_static")
 

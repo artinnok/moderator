@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from api.authorize import AuthorizeView, CallbackView
+from api.authorize import AuthorizeView, CallbackView, RedirectView
 from api.views import PermissionsView, StartView
 
 
@@ -24,5 +24,10 @@ urlpatterns = [
         regex=r'^start/$',
         view=StartView.as_view(),
         name='start'
+    ),
+    url(
+        regex=r'^redirect/$',
+        view=RedirectView.as_view(),
+        name='redirect'
     ),
 ]
