@@ -1,39 +1,20 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-import requests
-from celery import chain, group, chord
+from celery import group
 
-from api.fetch import fetch, fetch_post_list, fetch_comment
+from api.fetch import fetch_post_list, fetch_comment, base_fetch
 from api.filter import filter_comment_list, filter_post_list
 from api.delete import delete_comment
 from core.models import Token
 
 
-class DeleteView(APIView):
-    url = 'https://api.vk.com/method/{method_name}?{parameters}&access_token={access_token}&v=5.59'
-
-    def fetch(self, method, parameters, token):
-        return requests.get(self.url.format(
-            method_name=method,
-            parameters=parameters,
-            access_token=token
-        )).json()
-
-    def get(self, request, *args, **kwargs):
-        method = 'wall.deleteComment'
-        parameters = 'owner_id={}&comment_id={}'.format(-112088372, 41)
-        token = Token.objects.last().access_token
-        r = self.fetch(method, parameters, token)
-        return Response(r)
-
-
-class PermissionsView(DeleteView):
+class PermissionsView(APIView):
     def get(self, request, *args, **kwargs):
         method = 'account.getAppPermissions'
         parameters = ''
         token = Token.objects.last().access_token
-        r = self.fetch(method, parameters, token)
-        return Response(r)
+        res = base_fetch(method, parameters, token)
+        return Response(res)
 
 
 class StartView(APIView):
