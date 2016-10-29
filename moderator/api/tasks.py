@@ -13,5 +13,3 @@ def delete_comment_list(self, comment_id, owner_id):
 
     json = self.fetch.delay(method, parameters, token).wait()
     return json['response']
-
-

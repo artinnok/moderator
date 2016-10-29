@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from api.authorize import AuthorizeView, CallbackView
-from api.views import DeleteView, PermissionsView
+from api.views import DeleteView, PermissionsView, StartView
 
 
 urlpatterns = [
@@ -24,5 +24,10 @@ urlpatterns = [
         regex=r'^permissions/$',
         view=PermissionsView.as_view(),
         name='permissions'
+    ),
+    url(
+        regex=r'^start/$',
+        view=StartView.as_view(),
+        name='start'
     ),
 ]
