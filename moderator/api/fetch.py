@@ -33,15 +33,8 @@ def fetch_post_list(owner_id):
 def fetch_comment_list(post_list, owner_id):
     method = 'wall.getComments'
     token = Token.objects.last().access_token
-
-    out = []
-    for post in post_list:
-        parameters = ('owner_id={owner_id}&'
-                      'post_id={post_id}&'
-                      'need_likes=1&'
-                      'count=100'.format(owner_id=owner_id, post_id=post))
-        data = fetch(method, parameters, token)
-        print(data)
-        out += data
-    return out
+    parameters = ('owner_id={owner_id}&'
+                  'post_id={post_id}&'
+                  'need_likes=1&'
+                  'count=100'.format(owner_id=owner_id, post_id=post))
 

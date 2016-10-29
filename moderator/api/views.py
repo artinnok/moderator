@@ -38,24 +38,28 @@ class PermissionsView(DeleteView):
 class StartView(APIView):
     def get(self, request, *args, **kwargs):
         token = Token.objects.last().access_token
+        owner = -112088372
 
         # posts
-        res = chain(
-            fetch.s('wall.get', 'owner_id=-112088372&count=10', token),
-            filter_post_list.s(),
-        )()
-        post_list = res.get()
+        method = 'wall.get'
+        parameters = 'owner_id={}&count=10'
+        res = fetch.delay(
+            method,
+            parameters.format(owner),
+            token
+        )
+        post_list = res.get()['response']['items']
+        post_list = filter_post_list(post_list)
 
         # comments
-        callback = filter_comment_list.s()
-        parameters = ('owner_id=-112088372&'
+        method = 'wall.getComments'
+        parameters = ('owner_id={}&'
                       'post_id={}&'
                       'need_likes=1&'
                       'count=100')
-        header = [fetch.s('wall.getComments', parameters.format(post), token)
-                  for post in post_list]
-        res = chord(header)(callback)
+        res = group(fetch.s(method, parameters.format(owner, post), token)
+                    for post in post_list)()
         comment_list = res.get()
-
+        comment_list = filter_comment_list(comment_list)
         return Response(comment_list)
 
