@@ -30,20 +30,15 @@ def fetch_post_list(owner_id):
 
 @shared_task(name='fetch_comment_list', rate_limit='3/s')
 def fetch_comment_list(post_list, owner_id):
-    out = []
-    for post in post_list:
-        out += fetch_comment(post, owner_id)
-    return out
-
-
-@shared_task(name='fetch_comment_list', rate_limit='3/s')
-def fetch_comment(post_id, owner_id):
     method = 'wall.getComments'
-    parameters = ('owner_id={owner_id}&'
-                  'post_id={post_id}&'
-                  'need_likes=1&'
-                  'count=100'.format(owner_id=owner_id, post_id=post_id))
     token = Token.objects.last().access_token
 
-    json = fetch(method, parameters, token)
-    return json['response']['items']
+    out = []
+    for post in post_list:
+        parameters = ('owner_id={owner_id}&'
+                      'post_id={post_id}&'
+                      'need_likes=1&'
+                      'count=100'.format(owner_id=owner_id, post_id=post))
+        out += fetch(method, parameters, token)['response']['items']
+    return out
+

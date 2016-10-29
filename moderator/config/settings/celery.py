@@ -18,6 +18,6 @@ CELERY_IMPORTS = ['api.fetch', 'api.filter', 'api.start']
 CELERYBEAT_SCHEDULE = {
     'moderate': {
         'task': 'start',
-        'schedule': timedelta(minutes=1),
+        'schedule': timedelta(seconds=30),
     }
 }
