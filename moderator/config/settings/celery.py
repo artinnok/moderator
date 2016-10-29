@@ -1,21 +1,21 @@
 from datetime import timedelta
 
 
-BROKER_URL = 'amqp://guest@localhost//'
+broker_url = 'amqp://guest@localhost//'
 
-CELERY_TIMEZONE = 'Europe/Moscow'
+timezone = 'Europe/Moscow'
 
-CELERYD_MAX_TASKS_PER_CHILD = 1
+worker_max_tasks_per_child = 1
 
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
+accept_content = ['json']
+task_serializer = 'json'
 
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_RESULT_BACKEND = 'rpc://'
+result_serializer = 'json'
+result_backend = 'rpc://'
 
-CELERY_IMPORTS = ['api.fetch', 'api.filter', 'api.start']
+imports = ['api.fetch', 'api.filter', 'api.start']
 
-CELERYBEAT_SCHEDULE = {
+beat_schedule = {
     'moderate': {
         'task': 'start',
         'schedule': timedelta(seconds=30),
