@@ -3,7 +3,7 @@ from rest_framework.response import Response
 import requests
 from celery import chain, group, chord
 
-from api.fetch import fetch, fetch_post_list, fetch_comment_list
+from api.fetch import fetch, fetch_post_list, fetch_comment
 from api.filter import filter_comment_list, filter_post_list
 from core.models import Token
 
@@ -37,29 +37,17 @@ class PermissionsView(DeleteView):
 
 class StartView(APIView):
     def get(self, request, *args, **kwargs):
-        token = Token.objects.last().access_token
-        owner = -112088372
+        access_token = '455c5c6c0a7234dbd5f7d2f187ba892a3b83453222abb289e674ed430d6303a01a8f3883267caab69d0e7'
+        owner_id = -112088372
 
         # posts
-        method = 'wall.get'
-        parameters = 'owner_id={}&count=10'
-        res = fetch.delay(
-            method,
-            parameters.format(owner),
-            token
-        )
-        post_list = res.get()['response']['items']
+        post_list = fetch_post_list.delay(owner_id, access_token).get()
         post_list = filter_post_list(post_list)
 
         # comments
-        method = 'wall.getComments'
-        parameters = ('owner_id={}&'
-                      'post_id={}&'
-                      'need_likes=1&'
-                      'count=100')
-        res = group(fetch.s(method, parameters.format(owner, post), token)
-                    for post in post_list)()
-        comment_list = res.get()
+        comment_list = group(fetch_comment.s(post, owner_id, access_token)
+                             for post in post_list)().get()
         comment_list = filter_comment_list(comment_list)
+
         return Response(comment_list)
 
