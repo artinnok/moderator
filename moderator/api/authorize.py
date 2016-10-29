@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.conf import settings
 import requests
 
-from core.models import Token
+from core.models import User
 
 
 class AuthorizeView(APIView):
@@ -30,7 +30,7 @@ class CallbackView(APIView):
             code=code
         ))
         json = r.json()
-        Token.objects.update_or_create(
+        User.objects.update_or_create(
             access_token=json['access_token'],
             defaults=json
         )

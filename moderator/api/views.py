@@ -5,14 +5,14 @@ from celery import group
 from api.fetch import fetch_post_list, fetch_comment, base_fetch
 from api.filter import filter_comment_list, filter_post_list
 from api.delete import delete_comment
-from core.models import Token
+from core.models import User
 
 
 class PermissionsView(APIView):
     def get(self, request, *args, **kwargs):
         method = 'account.getAppPermissions'
         parameters = ''
-        token = Token.objects.last().access_token
+        token = User.objects.last().access_token
         res = base_fetch(method, parameters, token)
         return Response(res)
 

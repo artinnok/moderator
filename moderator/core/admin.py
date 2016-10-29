@@ -1,18 +1,25 @@
 from django.contrib import admin
-from django.contrib.auth.models import User, Group
+from django.contrib.auth import models
 
-from core.models import Token, Club
-
-
-class TokenAdmin(admin.ModelAdmin):
-    list_display = ('user_id', 'access_token', 'expires_in',)
+from core.models import User, Public
 
 
-class ClubAdmin(admin.ModelAdmin):
+class PublicInline(admin.TabularInline):
+    model = Public
+    extra = 1
+
+
+class UserAdmin(admin.ModelAdmin):
+    inlines = [PublicInline]
+    list_display = ('user_id', 'access_token',)
+
+
+class PublicAdmin(admin.ModelAdmin):
     list_display = ('title', 'owner_id',)
 
-admin.site.register(Token, TokenAdmin)
-admin.site.register(Club, ClubAdmin)
+admin.site.register(User, UserAdmin)
+admin.site.register(Public, PublicAdmin)
 
-admin.site.unregister(User)
-admin.site.unregister(Group)
+# django user and group
+admin.site.unregister(models.User)
+admin.site.unregister(models.Group)

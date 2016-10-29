@@ -4,9 +4,9 @@ from core import common_models as cm
 from core import behaviors as bh
 
 
-class Token(cm.Common):
+class User(cm.Common):
     """
-    Токен, полученный от Вконтакте
+    Пользователь Вконтакте, имеет много Пабликов
     """
     user_id = models.BigIntegerField(
         verbose_name='ID пользователя'
@@ -15,23 +15,25 @@ class Token(cm.Common):
         max_length=200,
         verbose_name='Токен'
     )
-    expires_in = models.BigIntegerField(
-        verbose_name='Истекает в течение'
-    )
 
     class Meta:
-        verbose_name = 'токен'
-        verbose_name_plural = 'токены'
+        verbose_name = 'пользователь'
+        verbose_name_plural = 'пользователи'
         ordering = ['-created']
 
     def __str__(self):
         return str(self.user_id)
 
 
-class Club(bh.Titleable, cm.Common):
+class Public(bh.Titleable, cm.Common):
     """
-    Сущность паблика
+    Паблик
     """
+    user = models.ForeignKey(
+        'core.User',
+        verbose_name='Пользователь',
+        related_name='public_list'
+    )
     owner_id = models.BigIntegerField(
         verbose_name='ID паблика'
     )
