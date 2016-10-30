@@ -9,9 +9,9 @@ def filter_post_list(post_list):
 def filter_comment_list(comment_list):
     out = []
     for comment in comment_list:
-        if is_liked(comment, 5) and is_past(comment, 5):
+        if is_liked(comment, 2) and is_past(comment, 5):
             out.append(comment['id'])
-        if is_liked(comment, 10) and is_past(comment, 10):
+        if is_liked(comment, 5) and is_past(comment, 10):
             out.append(comment['id'])
     return out
 

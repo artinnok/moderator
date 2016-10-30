@@ -24,7 +24,7 @@ def fetch(method, parameters, access_token):
 def fetch_post_list(owner_id, access_token):
     method = 'wall.get'
     parameters = ('owner_id={owner_id}'
-                  '&count=10'.format(owner_id=owner_id))
+                  '&count=100'.format(owner_id=owner_id))
 
     return base_fetch(method, parameters, access_token)['response']['items']
 
