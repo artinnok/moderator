@@ -11,7 +11,11 @@ class PublicInline(admin.TabularInline):
 
 class UserAdmin(admin.ModelAdmin):
     inlines = [PublicInline]
-    list_display = ('user_id', 'access_token',)
+    list_display = ('user_id', 'access_token', 'get_public_list')
+
+    def get_public_list(self, obj):
+        return [public.title for public in obj.public_list.all()]
+    get_public_list.short_description = 'Паблики'
 
 
 admin.site.register(User, UserAdmin)
