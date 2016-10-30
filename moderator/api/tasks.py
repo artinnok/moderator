@@ -5,4 +5,5 @@ import requests
 
 @shared_task(name='start')
 def start():
-    requests.get(settings.START_URL + '/api/start/')
+    res = requests.get(settings.START_URL + '/api/start/')
+    return res.json()
