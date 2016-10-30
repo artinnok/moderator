@@ -14,11 +14,7 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ('user_id', 'access_token',)
 
 
-class PublicAdmin(admin.ModelAdmin):
-    list_display = ('title', 'owner_id',)
-
 admin.site.register(User, UserAdmin)
-admin.site.register(Public, PublicAdmin)
 
 # django user and group
 admin.site.unregister(models.User)
