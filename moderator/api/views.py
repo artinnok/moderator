@@ -1,6 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from celery import group
+from django.conf import settings
+from django.shortcuts import redirect
 
 from api.fetch import fetch_post_list, fetch_comment, base_fetch
 from api.filter import filter_comment_list, filter_post_list
@@ -9,6 +11,9 @@ from core.models import User, Public
 
 
 class PermissionsView(APIView):
+    """
+    Проверка прав доступа
+    """
     def get(self, request, *args, **kwargs):
         method = 'account.getAppPermissions'
         parameters = ''
@@ -21,7 +26,30 @@ class PermissionsView(APIView):
         return Response(out)
 
 
+class AuthorizeView(APIView):
+    """
+    Авторизует пользователя в приложении
+    """
+    url = ('https://oauth.vk.com/authorize?'
+           'client_id={client_id}&'
+           'display=page&'
+           'redirect_uri={redirect_uri}&'
+           'scope={scope}&'
+           'response_type=token&'
+           'v=5.59')
+
+    def get(self, request, *args, **kwargs):
+        return redirect(self.url.format(
+            client_id=settings.CLIENT_ID,
+            redirect_uri=settings.REDIRECT_URI,
+            scope='wall,offline'
+        ))
+
+
 class StartView(APIView):
+    """
+    Только для дебага
+    """
     def get(self, request, *args, **kwargs):
         out = []
         for public in Public.objects.all():
