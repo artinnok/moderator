@@ -9,4 +9,7 @@ def delete_comment(owner_id, comment_id, access_token):
     parameters = ('owner_id={owner_id}&'
                   'comment_id={comment_id}'.format(owner_id=owner_id,
                                                    comment_id=comment_id))
-    return base_fetch(method, parameters, access_token)
+    res = base_fetch(method, parameters, access_token)
+    out = {'comment_id': comment_id}
+    out.update(res)
+    return out
