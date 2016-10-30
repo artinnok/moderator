@@ -19,3 +19,5 @@ INSTALLED_APPS = INSTALLED_APPS + [
 ]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+START_URL = 'http://localhost:8000'

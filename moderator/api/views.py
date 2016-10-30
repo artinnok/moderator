@@ -48,7 +48,7 @@ class AuthorizeView(APIView):
 
 class StartView(APIView):
     """
-    Только для дебага
+    Старт зачистки коментов
     """
     def get(self, request, *args, **kwargs):
         out = []

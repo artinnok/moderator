@@ -16,6 +16,6 @@ imports = ['api.fetch', 'api.delete']
 beat_schedule = {
     'moderate': {
         'task': 'start',
-        'schedule': timedelta(seconds=30),
+        'schedule': timedelta(minutes=5),
     },
 }
