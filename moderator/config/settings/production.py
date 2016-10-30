@@ -3,7 +3,7 @@ from config.settings.base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['moder-bot.ru', 'www.moder-bot.ru']
 
 DATABASES = {
     'default': {
