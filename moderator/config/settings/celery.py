@@ -14,11 +14,11 @@ result_backend = 'rpc://'
 imports = ['api.fetch', 'api.delete']
 
 task_routes = {
-    'fetch': 'foo',
-    'fetch_post_list': 'foo',
-    'fetch_comment': 'foo',
-    'delete_comment': 'foo',
-    'start': 'bar'
+    'fetch': 'fetch',
+    'fetch_post_list': 'fetch',
+    'fetch_comment': 'fetch',
+    'delete_comment': 'delete',
+    'start': 'start'
 }
 
 beat_schedule = {
