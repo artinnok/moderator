@@ -15,12 +15,12 @@ def base_fetch(method, parameters, access_token):
     )).json()
 
 
-@shared_task(name='fetch', rate_limit='3/s')
+@shared_task(name='fetch', rate_limit='2.5/s')
 def fetch(method, parameters, access_token):
     return base_fetch(method, parameters, access_token)
 
 
-@shared_task(name='fetch_post_list', rate_limit='3/s')
+@shared_task(name='fetch_post_list', rate_limit='2.5/s')
 def fetch_post_list(owner_id, access_token):
     method = 'wall.get'
     parameters = ('owner_id={owner_id}'
@@ -29,7 +29,7 @@ def fetch_post_list(owner_id, access_token):
     return base_fetch(method, parameters, access_token)['response']['items']
 
 
-@shared_task(name='fetch_comment', rate_limit='3/s')
+@shared_task(name='fetch_comment', rate_limit='2.5/s')
 def fetch_comment(owner_id, post_id, access_token):
     method = 'wall.getComments'
     parameters = ('owner_id={owner_id}&'
