@@ -11,7 +11,7 @@ def filter_comment_list(comment_list):
     for comment in comment_list:
         if is_liked(comment, 2) and is_past(comment, 5):
             out.append(comment['id'])
-        if is_liked(comment, 5) and is_past(comment, 10):
+        elif is_liked(comment, 5) and is_past(comment, 10):
             out.append(comment['id'])
     return out
 
