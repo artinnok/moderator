@@ -4,8 +4,8 @@ from celery import group
 from django.conf import settings
 from django.shortcuts import redirect
 
-from api.fetch import fetch_post_list, fetch_comment, base_fetch
-from api.filter import filter_comment_list, filter_post_list
+from api.fetch import fetch_post_list, fetch_comment_list, base_fetch
+from api.filter import filter_comment_list, filter_post_list, flatten
 from api.delete import delete_comment
 from core.models import User, Public
 
@@ -61,8 +61,9 @@ class StartView(APIView):
             post_list = filter_post_list(post_list)
 
             # retrieve comments
-            comment_list = group(fetch_comment.s(owner_id, post, access_token)
+            comment_list = group(fetch_comment_list.s(owner_id, post, access_token)
                                  for post in post_list)().get()
+            comment_list = flatten(comment_list)
             comment_list = filter_comment_list(comment_list)
 
             # delete comments

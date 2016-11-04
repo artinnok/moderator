@@ -16,9 +16,9 @@ imports = ['api.fetch', 'api.delete']
 task_routes = {
     'fetch': 'fetch',
     'fetch_post_list': 'fetch',
-    'fetch_comment': 'fetch',
+    'fetch_comment_list': 'fetch',
     'delete_comment': 'delete',
-    'start': 'start'
+    'start': 'start',
 }
 
 beat_schedule = {

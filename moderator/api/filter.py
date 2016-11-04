@@ -16,6 +16,10 @@ def filter_comment_list(comment_list):
     return out
 
 
+def flatten(comment_list):
+    return (item for sub in comment_list for item in sub)
+
+
 def is_liked(comment, count):
     return comment['likes']['count'] < count
 
