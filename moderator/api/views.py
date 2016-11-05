@@ -57,11 +57,11 @@ class StartView(APIView):
             access_token = public.user.access_token
 
             # retrieve posts
-            post_list = fetch_post_list.delay(owner_id, access_token).get()
+            post_list = fetch_post_list.delay(owner_id).get()
             post_list = filter_post_list(post_list)
 
             # retrieve comments
-            comment_list = group(fetch_comment_list.s(owner_id, post, access_token)
+            comment_list = group(fetch_comment_list.s(owner_id, post)
                                  for post in post_list)().get()
             comment_list = flatten(comment_list)
             comment_list = filter_comment_list(comment_list)
