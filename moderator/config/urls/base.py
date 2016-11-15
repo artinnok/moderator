@@ -11,4 +11,8 @@ urlpatterns = [
         regex=r'^api/',
         view=include('api.urls', namespace='api')
     ),
+    url(
+        regex=r'^iframe/',
+        view=include('iframe.urls', namespace='iframe')
+    ),
 ]
