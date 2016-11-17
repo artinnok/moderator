@@ -1,4 +1,4 @@
 $(document).ready(function () {
-    var mask = 8192 + 4096;
+    var mask = 262144;
     VK.callMethod("showGroupSettingsBox", mask);
 });
