@@ -30,6 +30,12 @@ module.exports = {
     postcss: function () {
         return [autoprefixer];
     },
+    resolve: {
+        root: [
+            __dirname + "/node_modules/",
+            __dirname + "/static/src/blocks/"
+        ]
+    },
 
     plugins: [
         new webpack.NoErrorsPlugin(),
@@ -37,7 +43,8 @@ module.exports = {
             $: "jquery",
             jQuery: "jquery",
             "window.jQuery": "jquery",
-            Cookies: "js-cookie"
+            Cookies: "js-cookie",
+            VK: "vk/vk.js"
 
         }),
         new webpack.optimize.UglifyJsPlugin({
