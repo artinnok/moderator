@@ -16,7 +16,7 @@ $(document).ready(function () {
             VK.callMethod("showGroupSettingsBox", mask);
         }
     }
-    $.on("onGroupSettingsChanged", function (event) {
+    $(document).on("onGroupSettingsChanged", function (event) {
         alert(event.data);
     })
 });
