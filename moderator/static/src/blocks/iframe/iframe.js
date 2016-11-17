@@ -6,7 +6,8 @@ $(document).ready(function () {
     var permissions = query.api_settings;
     var access_token = query.access_token;
     var installed = query.is_app_user;
-    var mask = 262144;
+    console.log(query);
+    var mask = 0;
 
     if (installed == false){
         VK.callMethod("showGroupSettingsBox", mask);
@@ -16,7 +17,7 @@ $(document).ready(function () {
             VK.callMethod("showGroupSettingsBox", mask);
         }
     }
-    $(document).bind("onGroupSettingsChanged", function (event) {
-        console.log(event.data)
-    })
+    document.addEventListener("myEvent",function (data) {
+        console.log(data)
+    }, false)
 });
