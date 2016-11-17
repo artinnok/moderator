@@ -7,18 +7,16 @@ $(document).ready(function () {
     var access_token = query.access_token;
     var installed = query.is_app_user;
     var mask = 262144;
-    VK.callMethod("showInstallBox");
-    VK.callMethod("showGroupSettingsBox", mask);
 
-    // if (installed == false){
-    //     VK.callMethod("showGroupSettingsBox", mask);
-    // }
-    // else{
-    //     if (permissions != mask){
-    //         VK.callMethod("showGroupSettingsBox", mask);
-    //     }
-    // }
-    // $(document).on("onGroupSettingsChanged", function (event) {
-    //     console.log(event.data)
-    // })
+    if (installed == false){
+        VK.callMethod("showGroupSettingsBox", mask);
+    }
+    else{
+        if (permissions != mask){
+            VK.callMethod("showGroupSettingsBox", mask);
+        }
+    }
+    $(document).bind("onGroupSettingsChanged", function (event) {
+        console.log(event.data)
+    })
 });
