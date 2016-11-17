@@ -7,17 +7,22 @@ $(document).ready(function () {
     var access_token = query.access_token;
     var installed = query.is_app_user;
     var mask = 4096;
-    console.log(query);
 
     if (installed == false){
         VK.callMethod("showGroupSettingsBox", mask);
     }
     else{
-        if (permissions >= mask){
+        if (permissions != mask){
             VK.callMethod("showGroupSettingsBox", mask);
         }
     }
     VK.addCallback("onGroupSettingsChanged", function(data){
        console.log(data);
     });
+    VK.api("wall.deleteComment", {
+        "owner_id": -132545756,
+        "comment_id": 7
+    }, function (data) {
+        console.log(data);
+    })
 });
