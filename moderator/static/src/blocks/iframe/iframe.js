@@ -7,7 +7,8 @@ VK.init(function () {
     var access_token = query.access_token;
     var installed = query.is_app_user;
     var mask = 4096;
-    
+    console.log(query);
+
     if (installed == false){
         VK.callMethod("showGroupSettingsBox", mask);
     }
@@ -25,4 +26,6 @@ VK.init(function () {
     }, function (data) {
         console.log(data);
     })
-});
+}, function () {
+
+}, '5.60');

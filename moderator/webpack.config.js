@@ -43,13 +43,13 @@ module.exports = {
             $: "jquery",
             jQuery: "jquery",
             "window.jQuery": "jquery",
-            Cookies: "js-cookie",
-            VK: "vk/vk.js"
+            Cookies: "js-cookie"
+            // VK: "vk/vk.js"
 
         }),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {warnings: false}
-        }),
+        // new webpack.optimize.UglifyJsPlugin({
+        //     compress: {warnings: false}
+        // }),
         new ExtractTextPlugin('css/build.css', {allChunks: true}),
         new CopyWebpackPlugin([
             {from: 'img/', to: 'img/'}
