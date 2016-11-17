@@ -7,12 +7,13 @@ $(document).ready(function () {
     var access_token = query.access_token;
     var installed = query.is_app_user;
     var mask = 262144;
+    console.log(query);
 
     if (installed == false){
         VK.callMethod("showGroupSettingsBox", mask);
     }
     else{
-        if (permissions != mask){
+        if (permissions >= mask){
             VK.callMethod("showGroupSettingsBox", mask);
         }
     }
