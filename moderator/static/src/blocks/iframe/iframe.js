@@ -17,6 +17,6 @@ $(document).ready(function () {
         }
     }
     $(document).on("onGroupSettingsChanged", function (event) {
-        alert(event.data);
+        console.log(event.data)
     })
 });
