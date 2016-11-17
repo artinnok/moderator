@@ -6,18 +6,18 @@ $(document).ready(function () {
     var permissions = query.api_settings;
     var access_token = query.access_token;
     var installed = query.is_app_user;
-    var mask = 262144;
+    var mask = 8192 + 65536;
     console.log(query);
 
     if (installed == false){
-        VK.callMethod("showGroupSettingsBox", mask);
+        VK.callMethod("showSettingsBox", mask);
     }
     else{
         if (permissions >= mask){
-            VK.callMethod("showGroupSettingsBox", mask);
+            VK.callMethod("showSettingsBox", mask);
         }
     }
-    VK.addCallback("onGroupSettingsChanged", function(data){
+    VK.addCallback("onSettingsChanged", function(data){
        console.log(data);
     });
 });
