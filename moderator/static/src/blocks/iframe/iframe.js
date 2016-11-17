@@ -17,7 +17,13 @@ $(document).ready(function () {
             VK.callMethod("showGroupSettingsBox", mask);
         }
     }
-    document.addEventListener("myEvent",function (data) {
-        console.log(data)
-    }, false)
+    $(document).on("onGroupSettingsChanged",  function () {
+        console.log('HERE 1')
+    });
+    $('body').on("onGroupSettingsChanged",  function () {
+        console.log('HERE 2')
+    });
+    $('*').on("onGroupSettingsChanged",  function () {
+        console.log('HERE 3')
+    });
 });
