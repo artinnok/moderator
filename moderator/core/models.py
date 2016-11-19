@@ -4,38 +4,22 @@ from core import common_models as cm
 from core import behaviors as bh
 
 
-class User(cm.Common):
+class Public(bh.Titleable, cm.Common):
     """
-    Пользователь Вконтакте, имеет много Пабликов
+    Паблик
     """
-    user_id = models.BigIntegerField(
-        verbose_name='ID пользователя'
+    owner_id = models.BigIntegerField(
+        verbose_name='ID паблика'
     )
     access_token = models.CharField(
         max_length=200,
         verbose_name='Токен'
     )
-
-    class Meta:
-        verbose_name = 'пользователь'
-        verbose_name_plural = 'пользователи'
-        ordering = ['-created']
-
-    def __str__(self):
-        return str(self.user_id)
-
-
-class Public(bh.Titleable, cm.Common):
-    """
-    Паблик
-    """
-    user = models.ForeignKey(
-        'core.User',
-        verbose_name='Пользователь',
-        related_name='public_list'
+    like = models.PositiveSmallIntegerField(
+        verbose_name='Лайки'
     )
-    owner_id = models.BigIntegerField(
-        verbose_name='ID паблика'
+    minute = models.PositiveSmallIntegerField(
+        verbose_name='Минуты'
     )
 
     class Meta:
