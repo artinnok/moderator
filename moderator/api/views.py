@@ -20,7 +20,7 @@ class PublicView(APIView):
         return Response({"success": True})
 
 
-# TODO переписываем
+# TODO переписываем на полный асинхрон
 class StartView(APIView):
     """
     Старт зачистки коментов
@@ -39,7 +39,7 @@ class StartView(APIView):
             comment_list = group(fetch_comment_list.s(owner_id, post)
                                  for post in post_list)().get()
             comment_list = flatten(comment_list)
-            comment_list = filter_comment_list(comment_list)
+            comment_list = filter_comment_list(comment_list, public)
 
             # delete comments
             res = group(delete_comment.s(owner_id, comment, access_token)

@@ -6,12 +6,11 @@ def filter_post_list(post_list):
             if post['comments']['count'])
 
 
-def filter_comment_list(comment_list):
+# TODO переписываем
+def filter_comment_list(comment_list, public):
     out = []
     for comment in comment_list:
-        if is_liked(comment, 2) and is_past(comment, 5):
-            out.append(comment['id'])
-        elif is_liked(comment, 5) and is_past(comment, 10):
+        if is_liked(comment, public.like) and is_past(comment, public.minute):
             out.append(comment['id'])
     return out
 
